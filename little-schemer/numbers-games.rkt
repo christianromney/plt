@@ -12,7 +12,7 @@
 ;; integers for the moment
 (define (o+ a b)
   (cond ((zero? a) b)
-        (else (plus (sub1 a) (add1 b)))))
+        (else (add1 (o+ (sub1 a) b)))))
 
 (o+ 46 12)
 ;; => 58
