@@ -17,3 +17,13 @@
 (o+ 46 12)
 ;; => 58
 
+
+;; pp. 61 o- also doesn't work with negative  numbers
+(define (o- a b)
+  (cond ((zero? b) a)
+        (else (sub1 (o- a (sub1 b))))))
+
+(o- 4 2)
+;; => 2
+
+
