@@ -11,8 +11,8 @@
 ;; This procedure need only worry about positive
 ;; integers for the moment
 (define (o+ a b)
-  (cond ((zero? a) b)
-        (else (add1 (o+ (sub1 a) b)))))
+  (cond ((zero? b) a)
+        (else (add1 (o+ a (sub1 b))))))
 
 (o+ 46 12)
 ;; => 58
