@@ -26,3 +26,9 @@
 (o- 4 2)
 ;; => 2
 
+;; Recursive function equivalent of (apply + tup) 
+(define (addtup tup)
+  (cond ((null? tup) 0)
+        (else (+ (car tup) (addtup (cdr tup))))))
+
+(addtup '(1 2 3 4 5))
