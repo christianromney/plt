@@ -1,9 +1,8 @@
 #lang racket
-;; git clone https://github.com/miniKanren/Racket-miniKanren.git ~/Library/Racket/5.3.3/collects/mk
 
 ;; Github package resolution:
-;; http://docs.racket-lang.org/planet2/Package_Concepts.html
-;;(github://github.com/miniKanren/Racket-miniKanren/master)
+;; raco pkg install github://github.com/xmlblog/Racket-miniKanren/master
+
 (require miniKanren/mk)
 
 ;; Sugar
