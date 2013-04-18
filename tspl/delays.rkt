@@ -19,7 +19,7 @@
     (cond [(eq? 0 n) (scar s)] 
           [else (snth (scdr s) (- n 1))])))
 
-(snth fibonacci-seq 28)
+(snth fibonacci-seq 280)
 
 
 
