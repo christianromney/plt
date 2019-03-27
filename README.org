@@ -1,0 +1,43 @@
+*  What is this?
+
+This repository contains my solutions to exercises from various programming
+books, including:
+
+- [[https://mitpress.mit.edu/books/little-schemer-fourth-edition][The Little Schemer]]
+- [[https://mitpress.mit.edu/books/seasoned-schemer-second-edition][The Seasoned Schemer]]
+- [[https://mitpress.mit.edu/books/reasoned-schemer-second-edition][The Reasoned Schemer]]
+- [[http://the-little-prover.github.io/][The Little Prover]]
+- [[http://thelittletyper.com/][The Little Typer]]
+- [[http://www.eopl3.com/][Essentials of Programming Languages]]
+- [[https://www.htdp.org/][How to Design Programs]]
+- [[https://mitpress.mit.edu/sites/default/files/sicp/index.html][Structure and Interpretation of Computer Programs (SICP)]]
+
+I don't always work every exercise, so you won’t find a complete set of
+solutions to compare with your answers if you’re working through the same
+material. However, if you think you’ve got a better solution to something I’ve
+cooked up, please open an issue and point me to your implementation.
+
+I hope you get as much enjoyment and enlightenment from studying these works as
+I have.
+
+** Acknowledgments
+
+These authors have my undying admiration and gratitude for their contributions
+to programming language theory and my personal enrichment:
+
+- [[http://www.ccs.neu.edu/~cce/][Carl Eastlund]]
+- [[https://www.cs.indiana.edu/~dfried/dfried/][Daniel P. Friedman]]
+- [[https://davidchristiansen.dk/][David Thrane Christiansen]]
+- [[http://groups.csail.mit.edu/mac/users/gjs/gjs.html][Gerald Jay Sussman]]
+- [[https://labs.oracle.com/pls/apex/f?p=labs:bio:0:120][Guy Steele]]
+- [[http://groups.csail.mit.edu/mac/users/hal/hal.html][Hal Abelson]]
+- [[http://jmc.stanford.edu/][John McCarthy]]
+- [[https://www.amazon.com/Julie-Sussman/e/B000APHBHK][Julie Sussman]]
+- [[https://www.cs.indiana.edu/~dyb/][Kent Dybvig]]
+- [[http://www.cs.utah.edu/~mflatt/][Matthew Flatt]]
+- [[http://www.ccs.neu.edu/home/matthias/][Matthias Felleisen]]
+- [[http://www.ccs.neu.edu/home/wand/][Mitch Wand]]
+- [[http://okmij.org/ftp/][Oleg Kiselyov]]
+- [[http://users.cs.northwestern.edu/~robby/][Robert Bruce Findler]]
+- [[https://cs.brown.edu/~sk/][Shriram Krishnamurthi]]
+- [[http://webyrd.net/][William E. Byrd]]
