@@ -32,7 +32,7 @@
       0
       step-gauss)))
 
-;; multiplication (uses currying)
+;; multiplication (uses currying)XSXg
 (claim step* (-> Nat Nat Nat Nat))
 (define step*
   (λ (j)
@@ -46,7 +46,7 @@
       0
       (step* j))))
 
-;; final chapter 3 exercise left to the reader
+;; final chapter 3 exercise left to the reader (factorial)
 (claim step! (-> Nat Nat Nat))
 (define step!
   (λ (n-1 n-1!)
