@@ -64,6 +64,9 @@
 ;; Maybe there are more tricks to be discovered in later chapters?
 ((swap Nat Nat) (cons 1 2))
 
+;; This formulation is slightly more compact (thanks, currying)
+(swap Nat Nat (cons 1 2))
+
 ;; One more exercise from chapter 4...
 (claim twin
        (Π ((T U))

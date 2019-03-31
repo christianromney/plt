@@ -1,1 +1,3 @@
 #lang pie
+(claim foo (Pair Nat Nat))
+(define foo (cons 1 zero))
