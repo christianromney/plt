@@ -1,3 +1,25 @@
 #lang pie
-(claim foo (Pair Nat Nat))
-(define foo (cons 1 zero))
+
+;; length of List(E)
+(claim length-step
+       (Π ((E U))
+          (-> E (List E) Nat Nat)))
+
+(define length-step
+  (λ (E)
+    (lambda (e es len-es)
+      (add1 len-es))))
+
+(claim length
+       (Π ((E U))
+          (-> (List E) Nat)))
+
+(define length
+  (λ (E)
+    (λ (l)
+      (rec-List l
+                zero
+                (length-step E)))))
+
+(length Atom nil) ;; => 0
+(length Atom (:: 'foo (:: 'bar (:: 'baz nil)))) ;; => 3
