@@ -2,8 +2,8 @@
 
 ;; length of List(E)
 (claim length-step
-       (Π ((E U))
-          (-> E (List E) Nat Nat)))
+  (Π ((E U))
+     (-> E (List E) Nat Nat)))
 
 (define length-step
   (λ (E)
@@ -11,15 +11,66 @@
       (add1 len-es))))
 
 (claim length
-       (Π ((E U))
-          (-> (List E) Nat)))
+  (Π ((E U))
+     (-> (List E) Nat)))
 
 (define length
   (λ (E)
     (λ (l)
       (rec-List l
-                zero
-                (length-step E)))))
+        zero
+        (length-step E)))))
 
-(length Atom nil) ;; => 0
-(length Atom (:: 'foo (:: 'bar (:: 'baz nil)))) ;; => 3
+(length Atom nil) ;; => (the Nat 0)
+(length Atom (:: 'foo (:: 'bar (:: 'baz nil)))) ;; => (the Nat 3)
+(length Nat (:: 0 (:: 1 (:: 1 (:: 2 (:: 3 (:: 5 nil))))))) ;; => (the Nat 6)
+
+(claim +
+  (-> Nat Nat Nat))
+
+(define +
+  (λ (x y)
+    (rec-Nat x
+      y
+      (λ (x-1 sum)
+        (add1 sum)))))
+
+(claim sum
+  (-> (List Nat) Nat))
+
+(define sum
+  (λ (n)
+    (rec-List n
+      0
+      (λ (h t sum-tail)
+        (+ h sum-tail)))))
+
+(sum (:: 1 (:: 5 (:: 6 nil)))) ;; => (the Nat 12)
+
+(claim append-step
+  (Π ((E U))
+     (-> E (List E) (List E) (List E))))
+
+(define append-step
+  (λ (E)
+    (λ (e es appended-es)
+      (:: e appended-es))))
+
+(claim append
+  (Π ((E U))
+     (-> (List E) (List E) (List E))))
+
+(define append
+  (λ (E)
+    (λ (l m)
+      (rec-List l
+        m
+        (append-step E)))))
+
+(append Nat
+        (:: 0 (:: 1 nil))
+        (:: 2 (:: 3 nil))) ;; => (the (List Nat) (:: 0 (:: 1 (:: 2 (:: 3 nil)))))
+
+(append Atom
+        (:: 'foo (:: 'bar nil))
+        (:: 'baz (:: 'quux nil))) ;; => (the (List Atom) (:: 'foo (:: 'bar (:: 'baz (:: 'quux nil)))))
