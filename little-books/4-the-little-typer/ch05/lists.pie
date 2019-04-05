@@ -1,9 +1,11 @@
 #lang pie
 
-;; length of List(E)
+;; =length=
+
 (claim length-step
   (Π ((E U))
-     (-> E (List E) Nat Nat)))
+     (-> E (List E) Nat
+         Nat)))
 
 (define length-step
   (λ (E)
@@ -12,7 +14,8 @@
 
 (claim length
   (Π ((E U))
-     (-> (List E) Nat)))
+     (-> (List E)
+         Nat)))
 
 (define length
   (λ (E)
@@ -21,12 +24,23 @@
         zero
         (length-step E)))))
 
-(length Atom nil) ;; => (the Nat 0)
-(length Atom (:: 'foo (:: 'bar (:: 'baz nil)))) ;; => (the Nat 3)
-(length Nat (:: 0 (:: 1 (:: 1 (:: 2 (:: 3 (:: 5 nil))))))) ;; => (the Nat 6)
+(check-same Nat zero (length Atom nil))
+
+(check-same
+ Nat
+ (the Nat 3)
+ (length Atom (:: 'foo (:: 'bar (:: 'baz nil)))))
+
+(check-same
+ Nat
+ (the Nat 6)
+ (length Nat (:: 0 (:: 1 (:: 1 (:: 2 (:: 3 (:: 5 nil))))))))
+
+;; =sum=
 
 (claim +
-  (-> Nat Nat Nat))
+  (-> Nat Nat
+      Nat))
 
 (define +
   (λ (x y)
@@ -36,7 +50,8 @@
         (add1 sum)))))
 
 (claim sum
-  (-> (List Nat) Nat))
+  (-> (List Nat)
+      Nat))
 
 (define sum
   (λ (n)
@@ -45,11 +60,17 @@
       (λ (h t sum-tail)
         (+ h sum-tail)))))
 
-(sum (:: 1 (:: 5 (:: 6 nil)))) ;; => (the Nat 12)
+(check-same
+ Nat
+ 12
+ (sum (:: 1 (:: 5 (:: 6 nil)))))
+
+;; =append=
 
 (claim append-step
   (Π ((E U))
-     (-> E (List E) (List E) (List E))))
+     (-> E (List E) (List E)
+         (List E))))
 
 (define append-step
   (λ (E)
@@ -58,7 +79,8 @@
 
 (claim append
   (Π ((E U))
-     (-> (List E) (List E) (List E))))
+     (-> (List E) (List E)
+         (List E))))
 
 (define append
   (λ (E)
@@ -67,20 +89,19 @@
         m
         (append-step E)))))
 
-(append Nat
-        (:: 0 (:: 1 nil))
-        (:: 2 (:: 3 nil))) ;; => (the (List Nat) (:: 0 (:: 1 (:: 2 (:: 3 nil)))))
+(check-same
+ (List Nat)
+ (append Nat
+         (:: 0 (:: 1 nil))
+         (:: 2 (:: 3 nil)))
+ (:: 0 (:: 1 (:: 2 (:: 3 nil)))))
 
-(append Atom
-        (:: 'foo (:: 'bar nil))
-        (:: 'baz (:: 'quux nil))) ;; => (the (List Atom) (:: 'foo (:: 'bar (:: 'baz (:: 'quux nil)))))
-
-;; (snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
-;; => (:: 'potato (:: 'butter (:: 'rye-bread nil)))
+;; =snoc=
 
 (claim step-snoc
   (Π ((E U))
-     (-> E (List E) (List E) (List E))))
+     (-> E (List E) (List E)
+         (List E))))
 
 (define step-snoc
   (λ (E)
@@ -89,7 +110,8 @@
 
 (claim snoc
   (Π ((E U))
-     (-> (List E) E (List E))))
+     (-> (List E) E
+         (List E))))
 
 (define snoc
   (λ (E)
@@ -98,9 +120,67 @@
         (:: e nil)
         (step-snoc E)))))
 
-(snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
-;; =>
-;; (the (List Atom)
-;;   (:: 'potato
-;;     (:: 'butter
-;;       (:: 'rye-bread nil))))
+(check-same
+ (List Atom)
+ (snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
+ (:: 'potato (:: 'butter (:: 'rye-bread nil))))
+
+;; =concat=
+
+(claim step-concat
+  (Π ((E U))
+     (-> E (List E) (List E)
+         (List E))))
+
+(define step-concat
+  (λ (E)
+    (λ (e es so-far)
+      (snoc E so-far e))))
+
+(claim concat
+  (Π ((E U))
+     (-> (List E) (List E)
+         (List E))))
+
+(define concat
+  (λ (E)
+    (λ (l m)
+      (rec-List l
+        m
+        (step-concat E)))))
+
+;; (check-same
+;;  (List Nat)
+;;  (concat Nat
+;;          (:: 0 (:: 1 nil))
+;;          (:: 2 nil))
+;;  (:: 0 (:: 1 (:: 2 nil))))
+
+;; =reverse=
+
+(claim step-reverse
+  (Π ((E U))
+     (-> E (List E) (List E)
+         (List E))))
+
+(define step-reverse
+  (λ (E)
+    (λ (e es so-far)
+      (snoc E so-far e))))
+
+(claim reverse
+  (Π ((E U))
+     (-> (List E)
+         (List E))))
+
+(define reverse
+  (λ (E)
+    (λ (l)
+      (rec-List l
+        (the (List E) nil)
+        (step-reverse E)))))
+
+(check-same
+ (List Nat)
+ (reverse Nat (:: 0 (:: 1 (:: 2 nil))))
+ (:: 2 (:: 1 (:: 0 nil))))
