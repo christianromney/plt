@@ -1,3 +1,4 @@
+;; -*- mode: racket -*-
 #lang pie
 
 ;; =length=
