@@ -145,16 +145,16 @@
 (define concat
   (λ (E)
     (λ (l m)
-      (rec-List l
-        m
+      (rec-List m
+        l
         (step-concat E)))))
 
-;; (check-same
-;;  (List Nat)
-;;  (concat Nat
-;;          (:: 0 (:: 1 nil))
-;;          (:: 2 nil))
-;;  (:: 0 (:: 1 (:: 2 nil))))
+(check-same
+ (List Nat)
+ (concat Nat
+         (:: 0 (:: 1 nil))
+         (:: 2 nil))
+ (:: 0 (:: 1 (:: 2 nil))))
 
 ;; =reverse=
 
