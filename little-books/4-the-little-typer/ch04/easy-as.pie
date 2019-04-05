@@ -63,10 +63,10 @@
 
 ;; It is annoying to have to parameterize every expression, however.
 ;; Maybe there are more tricks to be discovered in later chapters?
-((swap Nat Nat) (cons 1 2))
-
-;; This formulation is slightly more compact (thanks, currying)
-(swap Nat Nat (cons 1 2))
+(check-same
+ (Pair Nat Nat)
+ (cons 2 1)
+ (swap Nat Nat (cons 1 2)))
 
 ;; One more exercise from chapter 4...
 (claim twin
@@ -88,7 +88,10 @@
 (define twin-Nat
   (twin Nat))
 
-(twin-Nat 0)
+(check-same
+ (Pair Nat Nat)
+ (cons 0 0)
+ (twin-Nat 0))
 
 (claim twin-Atom
   (-> Atom (Pair Atom Atom)))
@@ -96,4 +99,7 @@
 (define twin-Atom
   (twin Atom))
 
-(twin-Atom 'pizza)
+(check-same
+ (Pair Atom Atom)
+ (cons 'pizza 'pizza)
+ (twin-Atom 'pizza))
