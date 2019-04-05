@@ -1,3 +1,4 @@
+;; -*- mode: racket; -*-
 #lang pie
 ;; the iterative step just needs to increment by 1
 (claim step+ (-> Nat Nat))

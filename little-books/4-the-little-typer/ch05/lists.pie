@@ -25,16 +25,19 @@
         zero
         (length-step E)))))
 
-(check-same Nat zero (length Atom nil))
+(check-same
+ Nat
+ zero
+ (length Atom nil))
 
 (check-same
  Nat
- (the Nat 3)
+ 3
  (length Atom (:: 'foo (:: 'bar (:: 'baz nil)))))
 
 (check-same
  Nat
- (the Nat 6)
+ 6
  (length Nat (:: 0 (:: 1 (:: 1 (:: 2 (:: 3 (:: 5 nil))))))))
 
 ;; =sum=
@@ -92,10 +95,11 @@
 
 (check-same
  (List Nat)
- (append Nat
-         (:: 0 (:: 1 nil))
-         (:: 2 (:: 3 nil)))
- (:: 0 (:: 1 (:: 2 (:: 3 nil)))))
+ (:: 0 (:: 1 (:: 2 (:: 3 nil))))
+ (append
+  Nat
+  (:: 0 (:: 1 nil))
+  (:: 2 (:: 3 nil))))
 
 ;; =snoc=
 
@@ -123,8 +127,8 @@
 
 (check-same
  (List Atom)
- (snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
- (:: 'potato (:: 'butter (:: 'rye-bread nil))))
+ (:: 'potato (:: 'butter (:: 'rye-bread nil)))
+ (snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread))
 
 ;; =concat=
 
@@ -152,10 +156,11 @@
 
 (check-same
  (List Nat)
- (concat Nat
-         (:: 0 (:: 1 nil))
-         (:: 2 nil))
- (:: 0 (:: 1 (:: 2 nil))))
+ (:: 0 (:: 1 (:: 2 nil)))
+ (concat
+  Nat
+  (:: 0 (:: 1 nil))
+  (:: 2 nil)))
 
 ;; =reverse=
 
@@ -183,5 +188,5 @@
 
 (check-same
  (List Nat)
- (reverse Nat (:: 0 (:: 1 (:: 2 nil))))
- (:: 2 (:: 1 (:: 0 nil))))
+ (:: 2 (:: 1 (:: 0 nil)))
+ (reverse Nat (:: 0 (:: 1 (:: 2 nil)))))

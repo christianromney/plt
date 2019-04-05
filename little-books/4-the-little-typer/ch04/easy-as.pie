@@ -1,3 +1,4 @@
+;; -*- mode: racket; -*-
 #lang pie
 ;; This chapter introduces Π expressions. Π expressions let us parameterize type
 ;; definitions for λ expressions to achieve generality.
