@@ -74,3 +74,33 @@
 (append Atom
         (:: 'foo (:: 'bar nil))
         (:: 'baz (:: 'quux nil))) ;; => (the (List Atom) (:: 'foo (:: 'bar (:: 'baz (:: 'quux nil)))))
+
+;; (snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
+;; => (:: 'potato (:: 'butter (:: 'rye-bread nil)))
+
+(claim step-snoc
+  (Π ((E U))
+     (-> E (List E) (List E) (List E))))
+
+(define step-snoc
+  (λ (E)
+    (λ (e es so-far)
+      (:: e so-far))))
+
+(claim snoc
+  (Π ((E U))
+     (-> (List E) E (List E))))
+
+(define snoc
+  (λ (E)
+    (λ (es e)
+      (rec-List es
+        (:: e nil)
+        (step-snoc E)))))
+
+(snoc Atom (:: 'potato (:: 'butter nil)) 'rye-bread)
+;; =>
+;; (the (List Atom)
+;;   (:: 'potato
+;;     (:: 'butter
+;;       (:: 'rye-bread nil))))
