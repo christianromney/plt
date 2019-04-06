@@ -1,7 +1,7 @@
 #lang racket
 
 ;; Github package resolution:
-;; raco pkg install github://github.com/xmlblog/Racket-miniKanren/master
+;; raco pkg install github://github.com/christianromney/Racket-miniKanren/master
 
 (require miniKanren/mk)
 
