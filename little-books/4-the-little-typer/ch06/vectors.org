@@ -1,0 +1,103 @@
+* Chapter 6
+** Vectors
+
+Vectors are specialized lists of a precise length. Lengths are important to
+track in Pie, because all functions must be total and certain operations, like
+head and tail, don’t make sense for lists of length zero (=nil=).
+
+The other type constructor for a vector is =(Vec E 𝓁)= where =E= is a type and
+=𝓁= is a =Nat=. For example, =(Vec Atom 1)= describes a vector type that
+contains precisely one Atom. There are two constructors for Vector: =vec::= and
+=vecnil=, the latter of which is the only instance of =(Vec E zero)=, for all
+=E=.
+
+We can define a function that returns the first item of a vector which contains
+a single item:
+
+#+BEGIN_SRC racket :tangle vectors.rkt :lang pie
+#lang pie
+
+(claim first-of-one
+  (Π ((E U))
+     (-> (Vec E 1)
+         E)))
+
+(define first-of-one
+  (λ (E)
+    (λ (v)
+      (head v))))
+
+(check-same
+ Nat
+ (the Nat 5)
+ (first-of-one Nat (vec:: 5 vecnil)))
+
+#+END_SRC
+
+We can similarly define a function that returns the first item of a vector of
+two items:
+
+#+BEGIN_SRC racket :tangle vectors.rkt :lang pie
+(claim first-of-two
+  (Π ((E U))
+     (-> (Vec E 2)
+         E)))
+
+(define first-of-two
+  (λ (E)
+    (λ (v)
+      (head v))))
+
+(check-same
+ Nat
+ (the Nat 5)
+ (first-of-two Nat (vec:: 5 (vec:: 6 vecnil))))
+
+#+END_SRC
+
+This is tedious, and there’s a simple way to generalize the function to any
+vector of length greater than =zero=:
+
+#+BEGIN_SRC racket :tangle vectors.rkt :lang pie
+  (claim first
+    (Π ((E U)
+        (l Nat))
+       (-> (Vec E (add1 l))
+           E)))
+
+  (define first
+    (λ (E l)
+      (λ (v)
+        (head v))))
+
+  (check-same
+   Nat
+   (the Nat 2)
+   (first Nat 0 (vec:: 2 vecnil)))
+
+#+END_SRC
+
+This is our first encounter with a type constructor that accepts not only types
+for parameterization, but also arbitrary values that can be used in expressions
+to specialize the type definition.
+
+Finally, let’s define =rest= for vectors of length greater than =zero=:
+
+#+BEGIN_SRC racket :tangle vectors.rkt :lang pie
+  (claim rest
+    (Π ((E U)
+        (l Nat))
+       (-> (Vec E (add1 l))
+           (Vec E l))))
+
+  (define rest
+    (λ (E l)
+      (λ (v)
+        (tail v))))
+
+  (check-same
+   (Vec Nat 1)
+   (the (Vec Nat 1) (vec:: 2 vecnil))
+   (rest Nat 1 (vec:: 1 (vec:: 2 vecnil))))
+
+#+END_SRC

@@ -3,20 +3,5 @@
 
 #+BEGIN_SRC racket :tangle yes :lang pie
   #lang pie
-  (claim first
-    (Π ((E U)
-        (l Nat))
-       (-> (Vec E (add1 l))
-           E)))
-
-  (define first
-    (λ (E l)
-      (λ (v)
-        (head v))))
-
-  (check-same
-   Nat
-   (the Nat 2)
-   (first Nat 0 (vec:: 2 vecnil)))
 
 #+END_SRC
