@@ -1,5 +1,4 @@
-* Chapter 6
-** Vectors
+* Vectors
 
 Vectors are specialized lists of a precise length. Lengths are important to
 track in Pie, because all functions must be total and certain operations, like
