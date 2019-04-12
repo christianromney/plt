@@ -1,4 +1,7 @@
 * Dependent Types
+  :PROPERTIES:
+  :ID:       5B3CC3CD-E9DB-4262-846C-0C644B27BFE4
+  :END:
 A dependent type is *a type that depends on something that is not a type*. Let’s
 define the function =peas= which returns a specified number of peas.
 
@@ -44,3 +47,64 @@ define the function =peas= which returns a specified number of peas.
                                     (vec:: 'pea vecnil))))))
    (peas 5))
 #+END_SRC
+
+Let’s write the =last= function, which returns the last element of a vector of
+any type.
+
+#+begin_src racket :lang pie :tangle yes
+  (claim motive-last
+    (-> U Nat
+        U))
+
+  (define motive-last
+    (λ (E k)
+      (-> (Vec E (add1 k))
+          E)))
+
+  (claim base-last
+    (Π ((E U))
+       (-> (Vec E (add1 zero))
+           E)))
+
+  (define base-last
+    (λ (E)
+      (λ (es)
+        (head es))))
+
+  (claim step-last
+    (Π ((E U)
+        (k Nat))
+       (-> (-> (Vec E (add1 k)) E)
+           (-> (Vec E (add1 (add1 k)))
+               E))))
+
+  (define step-last
+    (λ (E)
+      (λ (n-1 last-of-n-1)
+        (λ (es)
+          (last-of-n-1 (tail es))))))
+
+  (claim last
+    (Π ((E U)
+        (k Nat))
+       (-> (Vec E (add1 k))
+           E)))
+
+  (define last
+    (λ (E k)
+      (λ (es)
+        ((ind-Nat k
+           (motive-last E)
+           (base-last E)
+           (step-last E)) es))))
+
+  (check-same
+   Atom
+   'Done
+   (last Atom 0 (vec:: 'Done vecnil)))
+
+  (check-same
+   Atom
+   'Coming
+   (last Atom 2 (vec:: 'Winter (vec:: 'Is (vec:: 'Coming  vecnil)))))
+#+end_src
