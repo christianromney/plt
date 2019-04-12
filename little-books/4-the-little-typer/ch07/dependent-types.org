@@ -16,7 +16,7 @@ A dependent type is *a type that is defined by something that is not a type*.
 
 =ind-Nat= behaves like =rec-Nat= except that we can use it with
 dependent types. This means that base and step return different
-dependent types. =ind-Nat=
+dependent types. The arguments to =ind-Nat= are:
 
 - =target= : the initial =Nat=
 - =motive= : a function that is applied to the target at each step to
@@ -76,7 +76,7 @@ Let’s define the function =peas= which returns a specified number of peas.
 #+END_SRC
 
 Let’s write the =last= function, which returns the last element of a vector of
-any type.
+any type. /TODO/: work through this example step by step.
 
 #+begin_src racket :lang pie :tangle yes
   (claim motive-last
