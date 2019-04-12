@@ -1,9 +1,36 @@
 * Dependent Types
-  :PROPERTIES:
-  :ID:       5B3CC3CD-E9DB-4262-846C-0C644B27BFE4
-  :END:
-A dependent type is *a type that depends on something that is not a type*. Let’s
-define the function =peas= which returns a specified number of peas.
+A dependent type is *a type that is defined by something that is not a type*.
+
+** Induction on Natural Numbers
+ - Induction involves a proof of N=0, then of N+1
+ - In Pie, induction on Nat uses the form =ind-Nat=
+
+#+begin_example
+
+(ind-Nat target
+  motive
+  base
+  step)
+
+#+end_example
+
+=ind-Nat= behaves like =rec-Nat= except that we can use it with
+dependent types. This means that base and step return different
+dependent types. =ind-Nat=
+
+- =target= : the initial =Nat=
+- =motive= : a function that is applied to the target at each step to
+  determine the type returned by that step, or the base when the
+  target is =zero=
+- =base= : the value to return when the =target= is =zero=
+- =step= : a function that accepts the value under the =add1= and the
+  recursive result of the computation at that step. The value of the
+  final (top-most) =step= is the value of the =ind-Nat= expression.
+
+The workings of =ind-Nat= are best illustrated by example.
+
+** Exercises
+Let’s define the function =peas= which returns a specified number of peas.
 
 #+BEGIN_SRC racket :tangle yes :lang pie
   #lang pie
