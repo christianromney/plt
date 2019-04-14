@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dependent Types</title>
+<meta name="generator" content="Org mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Dependent Types</h1>
+<div id="outline-container-orgf53fa3c" class="outline-2">
+<h2 id="orgf53fa3c">Definition</h2>
+<div class="outline-text-2" id="text-orgf53fa3c">
+<p>
+A dependent type is <b>a type that is defined by something that is not a type</b>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org39b28e0" class="outline-2">
+<h2 id="org39b28e0">Induction on Natural Numbers</h2>
+<div class="outline-text-2" id="text-org39b28e0">
+<ul class="org-ul">
+<li>Induction involves a proof of N=0, then of N+1</li>
+<li>In Pie, induction on Nat uses the form <code>ind-Nat</code></li>
+<li><code>ind-Nat</code> can do everything <code>rec-Nat</code> can do, plus work with dependent types</li>
+<li><code>ind-Nat</code> takes an extra argument between the target and the base called the motive</li>
+<li>The motive is a function that returns the type of the expression at every step
+<ul class="org-ul">
+<li>this includes the base step</li>
+<li>this means the motive determines the type of the <code>ind-Nat</code> expression as a whole</li>
+</ul></li>
+</ul>
+
+<pre class="example">
+
+(ind-Nat target
+  motive
+  base
+  step)
+
+</pre>
+
+<p>
+We said above that <code>ind-Nat</code> behaves like <code>rec-Nat</code> except that we can use it
+with dependent types. This means that base and step return different dependent
+types. The arguments to <code>ind-Nat</code> are:
+</p>
+
+<ul class="org-ul">
+<li><code>target</code> : the initial <code>Nat</code></li>
+<li><code>motive</code> : a function that is applied to the target at each step to
+determine the type returned by that step, or the base when the
+target is <code>zero</code></li>
+<li><code>base</code> : the value to return when the <code>target</code> is <code>zero</code></li>
+<li><code>step</code> : a function that accepts the value under the <code>add1</code> and the
+recursive result of the computation at that step. The value of the
+final (top-most) <code>step</code> is the value of the <code>ind-Nat</code> expression.</li>
+</ul>
+
+<p>
+The workings of <code>ind-Nat</code> are best illustrated by example.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org279a73a" class="outline-2">
+<h2 id="org279a73a">Exercises</h2>
+<div class="outline-text-2" id="text-org279a73a">
+<p>
+Suppose want to define a function that returns a specific number of <code>’peas</code>. We
+could define the function to return a <code>(List Atom)</code> like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">#lang</span> <span style="color: #cc6666;">pie</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> step-list-of-peas
+  <span style="color: #81a2be;">(</span><span style="color: #81a2be;">-&gt;</span> Nat <span style="color: #de935f;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #de935f;">)</span>
+      <span style="color: #de935f;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">step-list-of-peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">lambda</span> <span style="color: #de935f;">(</span>k-1 answer-k-1<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>:: <span style="color: #2e8b57;">'pea</span> answer-k-1<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> list-of-peas
+  <span style="color: #81a2be;">(</span><span style="color: #81a2be;">-&gt;</span> Nat <span style="color: #de935f;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">list-of-peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">lambda</span> <span style="color: #de935f;">(</span>k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>rec-Nat k
+      <span style="color: #b5bd68;">(</span>the <span style="color: #c9b4cf;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #c9b4cf;">)</span> nil<span style="color: #b5bd68;">)</span>
+      step-list-of-peas<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span>check-same <span style="color: #81a2be;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #81a2be;">)</span>
+  <span style="color: #81a2be;">(</span>:: <span style="color: #2e8b57;">'pea</span> nil<span style="color: #81a2be;">)</span>
+  <span style="color: #81a2be;">(</span>list-of-peas <span style="color: #de935f; font-weight: bold;">1</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span>check-same <span style="color: #81a2be;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #81a2be;">)</span>
+  <span style="color: #81a2be;">(</span>the <span style="color: #de935f;">(</span><span style="color: #f0c674;">List</span> Atom<span style="color: #de935f;">)</span> nil<span style="color: #81a2be;">)</span>
+  <span style="color: #81a2be;">(</span>list-of-peas <span style="color: #de935f; font-weight: bold;">0</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+Using a list works in this case, but is unsatisfying because the type doesn’t
+describe <i>how many</i> peas are returned. What if we modify the code to use a
+Vector instead?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">#lang</span> <span style="color: #cc6666;">pie</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> vec-of-peas
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>k Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span>Vec Atom k<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">vec-of-peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>rec-Nat k
+      <span style="color: #b5bd68;">(</span>the <span style="color: #c9b4cf;">(</span>Vec Atom zero<span style="color: #c9b4cf;">)</span> vecnil<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #c9b4cf;">(</span>k-1 ans-k-1<span style="color: #c9b4cf;">)</span>
+        <span style="color: #c9b4cf;">(</span>the <span style="color: #f0c674;">(</span>Vec Atom <span style="color: #81a2be;">(</span><span style="color: #81a2be;">add1</span> k-1<span style="color: #81a2be;">)</span><span style="color: #f0c674;">)</span>
+             <span style="color: #f0c674;">(</span>vec:: <span style="color: #2e8b57;">'pea</span> ans-k-1<span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+This definition <i>seems</i> like it should work, but results in an error because
+<code>rec-Nat</code> isn’t able to work with dependent types. Now we’ll see how <code>ind-Nat</code>
+allows us to specify the different specific types returned by the base and each
+step.
+</p>
+
+<p>
+The first objective is to define the motive. Here’s how we can reason about the
+claim and definition of the motive, which we’ll call <code>motive-peas</code>. The motive
+is a function that will be applied to the target and return the <b>type</b> of the
+<code>ind-Nat</code> expression. The overall <code>peas</code> function is intended to return a
+<code>Vector</code> of Atoms, and the Vector type describes the exact length of the Vector.
+So we can reason that the motive will require a specific <code>Nat</code> describing the
+length of the Vector and will return a <i>type</i> that is a Vector of that length.
+In order to incorporate the specific <code>Nat</code>, we’ll introduce a binding for it in
+the claim with a <code>\Pi</code> expression.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">#lang</span> <span style="color: #cc6666;">pie</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> motive-peas
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>l Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #f0c674;">U</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">motive-peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>l<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>Vec Atom l<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+Notice that the motive returns the type <code>(Vec Atom zero)</code> if we call <code>(peas 0)</code>.
+Since the only <code>(Vec Atom zero)</code> is <code>vecnil</code>, we already know that will be the
+<code>base</code> in the <code>ind-Nat</code> expression as well as the overall return value for
+<code>(peas 0)</code>. At this point, we know the <code>target</code>, <code>motive</code>, and <code>base</code> of the
+<code>ind-Nat</code> expression, leaving only the <code>step</code> to figure out.
+</p>
+
+<p>
+The step function for <code>ind-Nat</code> behaves just as the step function for <code>rec-Nat</code>
+which means that it will receive two arguments when the target is <code>(the Nat
+(add1 k))</code>. The first argument will be <code>(the Nat k)</code> (eliminating an <code>add1</code>),
+and the second argument will be the recursive result of the step function for
+<code>(the Nat k)</code>.
+</p>
+
+<p>
+We can discover the correct implementation of <code>step-peas</code> by reasoning about a
+simple case. Let’s assume we’re computing the value of <code>(peas two)</code> which is
+<code>(peas (add1 (add1 zero)))</code>. This means the <code>target</code> of the <code>ind-Nat</code> expression
+is <code>two</code>. We know that the step function will be given two arguments <code>(add1
+zero)</code> and <code>(vec:: ’pea vecnil)</code>. The implementation of the step function must
+clearly use the <code>vec::</code> constructor to tack another <code>’pea</code> onto the recursive
+result.
+</p>
+
+<p>
+The claim is the tricky part. We know that we will need the value of the
+<code>Nat</code> to be used in the type definition, so we will need a <code>\Pi</code> expression. Since
+step is a function, we know the claim returns a function type. But how do we
+specify the type of the arguments and return value? It turns out we’ve already
+done that work. Both the second argument and the return value are the result of
+the step function. The point of introducing the <code>motive</code> was to calculate the
+result of the step function, so we <i>invoke</i> the motive in the claim to find the
+right type!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> step-peas
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>l-1 Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>motive-peas l-1<span style="color: #b5bd68;">)</span>
+         <span style="color: #b5bd68;">(</span>motive-peas <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> l-1<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">step-peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>l-1<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>answer-l-1<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>vec:: <span style="color: #2e8b57;">'pea</span> answer-l-1<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+With all of the parts of the <code>ind-Nat</code> expression defined, it’s trivial to
+stitch them together and check our work.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> peas
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>l Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span>Vec Atom l<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">peas</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>l<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>ind-Nat l
+      motive-peas
+      vecnil
+      step-peas<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span>check-same
+ <span style="color: #81a2be;">(</span>Vec Atom <span style="color: #de935f; font-weight: bold;">5</span><span style="color: #81a2be;">)</span>
+ <span style="color: #81a2be;">(</span>the <span style="color: #de935f;">(</span>Vec Atom <span style="color: #de935f; font-weight: bold;">5</span><span style="color: #de935f;">)</span>
+      <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'pea</span>
+             <span style="color: #b5bd68;">(</span>vec:: <span style="color: #2e8b57;">'pea</span>
+                    <span style="color: #c9b4cf;">(</span>vec:: <span style="color: #2e8b57;">'pea</span>
+                           <span style="color: #f0c674;">(</span>vec:: <span style="color: #2e8b57;">'pea</span>
+                                  <span style="color: #81a2be;">(</span>vec:: <span style="color: #2e8b57;">'pea</span> vecnil<span style="color: #81a2be;">)</span><span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span>
+ <span style="color: #81a2be;">(</span>peas <span style="color: #de935f; font-weight: bold;">5</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+</pre>
+</div>
+
+<p>
+Now we can move on to something slightly more complex. In this section, we will
+implement the <code>last</code> function, which returns the last element of a vector of any
+type. There is an interesting tension that we have to resolve. The first is that
+all functions in Pie must be <i>total</i> functions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket"><span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> motive-last
+  <span style="color: #81a2be;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #f0c674;">U</span> Nat
+      <span style="color: #f0c674;">U</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">motive-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>Vec E <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span>
+        E<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> base-last
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>Vec E <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> zero<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span>
+         E<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">base-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>es<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>head es<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> step-last
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>k Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #c9b4cf;">(</span>Vec E <span style="color: #f0c674;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span> E<span style="color: #b5bd68;">)</span>
+         <span style="color: #b5bd68;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #c9b4cf;">(</span>Vec E <span style="color: #f0c674;">(</span><span style="color: #81a2be;">add1</span> <span style="color: #81a2be;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #81a2be;">)</span><span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span>
+             E<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">step-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>n-1 last-of-n-1<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #c9b4cf;">(</span>es<span style="color: #c9b4cf;">)</span>
+        <span style="color: #c9b4cf;">(</span>last-of-n-1 <span style="color: #f0c674;">(</span>tail es<span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> <span style="color: #81a2be;">last</span>
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>k Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>Vec E <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span>
+         E<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>es<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span><span style="color: #c9b4cf;">(</span>ind-Nat k
+         <span style="color: #f0c674;">(</span>motive-last E<span style="color: #f0c674;">)</span>
+         <span style="color: #f0c674;">(</span>base-last E<span style="color: #f0c674;">)</span>
+         <span style="color: #f0c674;">(</span>step-last E<span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span> es<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span>check-same
+ Atom
+ <span style="color: #2e8b57;">'Done</span>
+ <span style="color: #81a2be;">(</span><span style="color: #81a2be;">last</span> Atom <span style="color: #de935f; font-weight: bold;">0</span> <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'Done</span> vecnil<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+<span style="color: #b294bb;">(</span>check-same
+ Atom
+ <span style="color: #2e8b57;">'Coming</span>
+ <span style="color: #81a2be;">(</span><span style="color: #81a2be;">last</span> Atom <span style="color: #de935f; font-weight: bold;">2</span> <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'Winter</span> <span style="color: #b5bd68;">(</span>vec:: <span style="color: #2e8b57;">'Is</span> <span style="color: #c9b4cf;">(</span>vec:: <span style="color: #2e8b57;">'Coming</span>  vecnil<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="validation"></p>
+</div>
+</body>
+</html>

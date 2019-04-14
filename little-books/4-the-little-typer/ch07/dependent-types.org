@@ -1,7 +1,10 @@
-* Dependent Types
+#+TITLE: Dependent Types
+#+OPTIONS: toc:nil num:nil author:nil timestamp:nil
+#+EXPORT_FILE_NAME: index.html
+* Definition
 A dependent type is *a type that is defined by something that is not a type*.
 
-** Induction on Natural Numbers
+* Induction on Natural Numbers
  - Induction involves a proof of N=0, then of N+1
  - In Pie, induction on Nat uses the form =ind-Nat=
  - =ind-Nat= can do everything =rec-Nat= can do, plus work with dependent types
@@ -34,7 +37,7 @@ types. The arguments to =ind-Nat= are:
 
 The workings of =ind-Nat= are best illustrated by example.
 
-** Exercises
+* Exercises
 
 Suppose want to define a function that returns a specific number of =’peas=. We
 could define the function to return a =(List Atom)= like this:
@@ -93,11 +96,22 @@ Vector instead?
 #+end_src
 
 This definition /seems/ like it should work, but results in an error because
-=rec-Nat= isn’t able to work with dependent types. Now we can see how =ind-Nat=
+=rec-Nat= isn’t able to work with dependent types. Now we’ll see how =ind-Nat=
 allows us to specify the different specific types returned by the base and each
 step.
 
-#+begin_src racket :tangle yes :lang pie
+The first objective is to define the motive. Here’s how we can reason about the
+claim and definition of the motive, which we’ll call =motive-peas=. The motive
+is a function that will be applied to the target and return the *type* of the
+=ind-Nat= expression. The overall =peas= function is intended to return a
+=Vector= of Atoms, and the Vector type describes the exact length of the Vector.
+So we can reason that the motive will require a specific =Nat= describing the
+length of the Vector and will return a /type/ that is a Vector of that length.
+In order to incorporate the specific =Nat=, we’ll introduce a binding for it in
+the claim with a =\Pi= expression.
+
+#+begin_src racket :tangle peas.rkt :lang pie
+
   #lang pie
 
   (claim motive-peas
@@ -108,6 +122,39 @@ step.
     (λ (l)
       (Vec Atom l)))
 
+#+end_src
+
+Notice that the motive returns the type =(Vec Atom zero)= if we call =(peas 0)=.
+Since the only =(Vec Atom zero)= is =vecnil=, we already know that will be the
+=base= in the =ind-Nat= expression as well as the overall return value for
+=(peas 0)=. At this point, we know the =target=, =motive=, and =base= of the
+=ind-Nat= expression, leaving only the =step= to figure out.
+
+The step function for =ind-Nat= behaves just as the step function for =rec-Nat=
+which means that it will receive two arguments when the target is =(the Nat
+(add1 k))=. The first argument will be =(the Nat k)= (eliminating an =add1=),
+and the second argument will be the recursive result of the step function for
+=(the Nat k)=.
+
+We can discover the correct implementation of =step-peas= by reasoning about a
+simple case. Let’s assume we’re computing the value of =(peas two)= which is
+=(peas (add1 (add1 zero)))=. This means the =target= of the =ind-Nat= expression
+is =two=. We know that the step function will be given two arguments =(add1
+zero)= and =(vec:: ’pea vecnil)=. The implementation of the step function must
+clearly use the =vec::= constructor to tack another =’pea= onto the recursive
+result.
+
+The claim is the tricky part. We know that we will need the value of the
+=Nat= to be used in the type definition, so we will need a =\Pi= expression. Since
+step is a function, we know the claim returns a function type. But how do we
+specify the type of the arguments and return value? It turns out we’ve already
+done that work. Both the second argument and the return value are the result of
+the step function. The point of introducing the =motive= was to calculate the
+result of the step function, so we /invoke/ the motive in the claim to find the
+right type!
+
+#+begin_src racket :tangle peas.rkt :lang pie
+
   (claim step-peas
     (Π ((l-1 Nat))
        (-> (motive-peas l-1)
@@ -117,6 +164,13 @@ step.
     (λ (l-1)
       (λ (answer-l-1)
         (vec:: 'pea answer-l-1))))
+
+#+end_src
+
+With all of the parts of the =ind-Nat= expression defined, it’s trivial to
+stitch them together and check our work.
+
+#+begin_src racket :tangle peas.rkt :lang pie
 
   (claim peas
     (Π ((l Nat))
@@ -140,10 +194,12 @@ step.
    (peas 5))
 #+end_src
 
-Here’s another exercise. Let’s write the =last= function, which returns the last
-element of a vector of any type. /TODO/: work through this example step by step.
+Now we can move on to something slightly more complex. In this section, we will
+implement the =last= function, which returns the last element of a vector of any
+type. There is an interesting tension that we have to resolve. The first is that
+all functions in Pie must be /total/ functions.
 
-#+begin_src racket :lang pie :tangle yes
+#+begin_src racket :tangle last.rkt :lang pie
   (claim motive-last
     (-> U Nat
         U))
