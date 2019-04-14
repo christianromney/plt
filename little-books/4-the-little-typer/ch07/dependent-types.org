@@ -4,6 +4,11 @@ A dependent type is *a type that is defined by something that is not a type*.
 ** Induction on Natural Numbers
  - Induction involves a proof of N=0, then of N+1
  - In Pie, induction on Nat uses the form =ind-Nat=
+ - =ind-Nat= can do everything =rec-Nat= can do, plus work with dependent types
+ - =ind-Nat= takes an extra argument between the target and the base called the motive
+ - The motive is a function that returns the type of the expression at every step
+   - this includes the base step
+   - this means the motive determines the type of the =ind-Nat= expression as a whole
 
 #+begin_example
 
@@ -14,9 +19,9 @@ A dependent type is *a type that is defined by something that is not a type*.
 
 #+end_example
 
-=ind-Nat= behaves like =rec-Nat= except that we can use it with
-dependent types. This means that base and step return different
-dependent types. The arguments to =ind-Nat= are:
+We said above that =ind-Nat= behaves like =rec-Nat= except that we can use it
+with dependent types. This means that base and step return different dependent
+types. The arguments to =ind-Nat= are:
 
 - =target= : the initial =Nat=
 - =motive= : a function that is applied to the target at each step to
@@ -82,15 +87,17 @@ Vector instead?
     (rec-Nat k
       (the (Vec Atom zero) vecnil)
       (λ (k-1 ans-k-1)
-        (vec:: 'pea ans-k-1)))))
+        (the (Vec Atom (add1 k-1))
+             (vec:: 'pea ans-k-1))))))
 
 #+end_src
 
-This definition /seems/ like it should work, but we get the following error:
+This definition /seems/ like it should work, but results in an error because
+=rec-Nat= isn’t able to work with dependent types. Now we can see how =ind-Nat=
+allows us to specify the different specific types returned by the base and each
+step.
 
-=vec:: requires that the length have add1 on top, not zero=
-
-#+BEGIN_SRC racket :tangle yes :lang pie
+#+begin_src racket :tangle yes :lang pie
   #lang pie
 
   (claim motive-peas
@@ -131,10 +138,10 @@ This definition /seems/ like it should work, but we get the following error:
                              (vec:: 'pea
                                     (vec:: 'pea vecnil))))))
    (peas 5))
-#+END_SRC
+#+end_src
 
-Let’s write the =last= function, which returns the last element of a vector of
-any type. /TODO/: work through this example step by step.
+Here’s another exercise. Let’s write the =last= function, which returns the last
+element of a vector of any type. /TODO/: work through this example step by step.
 
 #+begin_src racket :lang pie :tangle yes
   (claim motive-last

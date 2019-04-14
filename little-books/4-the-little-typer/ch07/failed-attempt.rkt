@@ -9,4 +9,5 @@
     (rec-Nat k
       (the (Vec Atom zero) vecnil)
       (λ (k-1 ans-k-1)
-        (vec:: 'pea ans-k-1)))))
+        (the (Vec Atom (add1 k-1))
+             (vec:: 'pea ans-k-1))))))
