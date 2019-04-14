@@ -30,7 +30,65 @@ dependent types. The arguments to =ind-Nat= are:
 The workings of =ind-Nat= are best illustrated by example.
 
 ** Exercises
-Let’s define the function =peas= which returns a specified number of peas.
+
+Suppose want to define a function that returns a specific number of =’peas=. We
+could define the function to return a =(List Atom)= like this:
+
+#+begin_src racket :tangle list-of-peas.rkt :lang pie
+
+#lang pie
+
+(claim step-list-of-peas
+  (-> Nat (List Atom)
+      (List Atom)))
+
+(define step-list-of-peas
+  (lambda (k-1 answer-k-1)
+    (:: 'pea answer-k-1)))
+
+(claim list-of-peas
+  (-> Nat (List Atom)))
+
+(define list-of-peas
+  (lambda (k)
+    (rec-Nat k
+      (the (List Atom) nil)
+      step-list-of-peas)))
+
+(check-same (List Atom)
+  (:: 'pea nil)
+  (list-of-peas 1))
+
+(check-same (List Atom)
+  (the (List Atom) nil)
+  (list-of-peas 0))
+
+#+end_src
+
+Using a list works in this case, but is unsatisfying because the type doesn’t
+describe /how many/ peas are returned. What if we modify the code to use a
+Vector instead?
+
+#+begin_src racket :tangle failed-attempt.rkt :lang pie
+
+#lang pie
+
+(claim vec-of-peas
+  (Π ((k Nat))
+     (Vec Atom k)))
+
+(define vec-of-peas
+  (λ (k)
+    (rec-Nat k
+      (the (Vec Atom zero) vecnil)
+      (λ (k-1 ans-k-1)
+        (vec:: 'pea ans-k-1)))))
+
+#+end_src
+
+This definition /seems/ like it should work, but we get the following error:
+
+=vec:: requires that the length have add1 on top, not zero=
 
 #+BEGIN_SRC racket :tangle yes :lang pie
   #lang pie

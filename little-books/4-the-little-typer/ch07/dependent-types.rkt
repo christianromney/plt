@@ -89,3 +89,8 @@
  Atom
  'Done
  (last Atom 0 (vec:: 'Done vecnil)))
+
+(check-same
+ Atom
+ 'Coming
+ (last Atom 2 (vec:: 'Winter (vec:: 'Is (vec:: 'Coming  vecnil)))))
