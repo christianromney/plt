@@ -1,5 +1,6 @@
 #+TITLE: Dependent Types
 #+OPTIONS: toc:nil num:nil author:nil timestamp:nil
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 #+EXPORT_FILE_NAME: index.html
 * Definition
 A dependent type is *a type that is defined by something that is not a type*.
@@ -44,32 +45,32 @@ could define the function to return a =(List Atom)= like this:
 
 #+begin_src racket :tangle list-of-peas.rkt :lang pie
 
-#lang pie
+  #lang pie
 
-(claim step-list-of-peas
-  (-> Nat (List Atom)
-      (List Atom)))
+  (claim step-list-of-peas
+    (-> Nat (List Atom)
+        (List Atom)))
 
-(define step-list-of-peas
-  (lambda (k-1 answer-k-1)
-    (:: 'pea answer-k-1)))
+  (define step-list-of-peas
+    (lambda (k-1 answer-k-1)
+      (:: 'pea answer-k-1)))
 
-(claim list-of-peas
-  (-> Nat (List Atom)))
+  (claim list-of-peas
+    (-> Nat (List Atom)))
 
-(define list-of-peas
-  (lambda (k)
-    (rec-Nat k
-      (the (List Atom) nil)
-      step-list-of-peas)))
+  (define list-of-peas
+    (lambda (k)
+      (rec-Nat k
+        (the (List Atom) nil)
+        step-list-of-peas)))
 
-(check-same (List Atom)
-  (:: 'pea nil)
-  (list-of-peas 1))
+  (check-same (List Atom)
+    (:: 'pea nil)
+    (list-of-peas 1))
 
-(check-same (List Atom)
-  (the (List Atom) nil)
-  (list-of-peas 0))
+  (check-same (List Atom)
+    (the (List Atom) nil)
+    (list-of-peas 0))
 
 #+end_src
 
@@ -196,8 +197,7 @@ stitch them together and check our work.
 
 Now we can move on to something slightly more complex. In this section, we will
 implement the =last= function, which returns the last element of a vector of any
-type. There is an interesting tension that we have to resolve. The first is that
-all functions in Pie must be /total/ functions.
+type.
 
 #+begin_src racket :tangle last.rkt :lang pie
   (claim motive-last
@@ -255,4 +255,142 @@ all functions in Pie must be /total/ functions.
    Atom
    'Coming
    (last Atom 2 (vec:: 'Winter (vec:: 'Is (vec:: 'Coming  vecnil)))))
+#+end_src
+
+For the final exercise, we will implement =drop-last= which returns all but the
+last element of a vector of any type. As before, we begin by defining the
+motive which is a function applied to the target =Nat= which returns the /type/
+of the =base=, the =step= and the =ind-Nat= expression as a whole. Since we want
+=drop-last= to work with vectors of any type, we need a type parameter. Since we
+want to make a dependent type on the length of the =Vector=, we also need a
+=Nat= parameter. Lastly, the motive returns a type /by definition/. We can now
+write the claim for =motive-drop-last=.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+  #lang pie
+
+  (claim motive-drop-last
+    (-> U Nat
+        U))
+
+#+end_src
+
+For the implementation of =motive-drop-last=, we know we are writing a function
+and that we must accept the type and length for the vector’s type definition,
+and we must return a /type/ describing a function that accepts a vector and
+returns a smaller vector.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (define motive-drop-last
+    (λ (E k)
+      (-> (Vec E (add1 k))
+          (Vec E k))))
+
+#+end_src
+
+With this type to guide us, we can synthesize the claim and the implementation
+of =base-drop-last=. Let’s start with the =claim=. Part of the entire point of
+the =motive= is to return the type of the =base=. Therefore, we need only look
+at the implementation of =motive=drop-last= to figure out what parameters we
+need to pass it from within the claim of the base. We need the type, which the
+base will also accept. We also need a specific Nat, which for the base case of
+induction on natural numbers we know to be zero:
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (claim base-drop-last
+    (Π ((E U))
+       (motive-drop-last E zero)))
+
+#+end_src
+
+This brings us to the implementation of the base. Plugging in =E= and =zero= for
+the arguments to the motive gives us the specific type of the base. The base
+must therefore return a function that takes a =(Vec E (add1 zero))= and returns
+a =(Vec E zero)=, of which there is only one instance: =vecnil=. The
+implementation can only be the following:
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (define base-drop-last
+    (λ (E) ;; for the Π expression type parameter
+      (λ (es) ;; a function accepting a vector of one
+        vecnil))) ;; returning a vector of zero
+
+#+end_src
+
+Next up, we have the =step= function. We know that the step function for
+=ind-Nat= when the target is a =k= will will accept two arguments. The first is
+=k-1= (a =Nat= with the top =add1= eliminated), and the recursive result. The
+recursive result is described by the motive. Finally, while the step function
+accepts the result for =k-1=, /it/ is supposed to return the result for =k=.
+This type is also described by the motive. We now have enough information to
+write the =claim= for =step-drop-last=.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (claim step-drop-last
+    (Π ((E U)
+        (k Nat))
+       (-> (motive-drop-last E k)
+           (motive-drop-last E (add1 k)))))
+
+#+end_src
+
+The implementation is easier to piece together if we think of the final
+(outermost) step of this computation. Since we’re dropping the last item of the
+vector only, we know we need to preserve the head of the vector and cons
+(=vec::=) it onto the recursive result. But the recursive result is a function
+that takes vector, so the only thing that makes sense is to apply the result
+function to the =tail= of the vector that is passed to the lambda returned by
+the step.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (define step-drop-last
+    (λ (E)
+      (λ (k-1 result-k-1)
+        (λ (es)
+          (vec:: (head es)
+                 (result-k-1
+                  (tail es)))))))
+
+#+end_src
+
+Finally, we come to =drop-last= which accepts the type and =Nat= that describe
+the vector. We can leverage the motive implementation here as well.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (claim drop-last
+    (Π ((E U)
+        (k Nat))
+       (motive-drop-last E k)))
+
+#+end_src
+
+The implementation can simply use =ind-Nat= to stitch together all of the pieces
+we’ve previously defined.
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (define drop-last
+    (λ (E k)
+      (ind-Nat k
+        (motive-drop-last E)
+        (base-drop-last E)
+        (step-drop-last E))))
+
+#+end_src
+
+All that remains is to check our implementation:
+
+#+begin_src racket :tangle drop-last.rkt :lang pie
+
+  (check-same
+   (Vec Atom 2)
+   (vec:: 'a (vec:: 'b vecnil))
+   (drop-last Atom 2 (vec:: 'a (vec:: 'b (vec:: 'c vecnil)))))
+
 #+end_src

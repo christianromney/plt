@@ -191,6 +191,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -241,18 +247,18 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">Dependent Types</h1>
-<div id="outline-container-orgf53fa3c" class="outline-2">
-<h2 id="orgf53fa3c">Definition</h2>
-<div class="outline-text-2" id="text-orgf53fa3c">
+<div id="outline-container-org529b68c" class="outline-2">
+<h2 id="org529b68c">Definition</h2>
+<div class="outline-text-2" id="text-org529b68c">
 <p>
 A dependent type is <b>a type that is defined by something that is not a type</b>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org39b28e0" class="outline-2">
-<h2 id="org39b28e0">Induction on Natural Numbers</h2>
-<div class="outline-text-2" id="text-org39b28e0">
+<div id="outline-container-orgfe63dce" class="outline-2">
+<h2 id="orgfe63dce">Induction on Natural Numbers</h2>
+<div class="outline-text-2" id="text-orgfe63dce">
 <ul class="org-ul">
 <li>Induction involves a proof of N=0, then of N+1</li>
 <li>In Pie, induction on Nat uses the form <code>ind-Nat</code></li>
@@ -297,9 +303,9 @@ The workings of <code>ind-Nat</code> are best illustrated by example.
 </div>
 </div>
 
-<div id="outline-container-org279a73a" class="outline-2">
-<h2 id="org279a73a">Exercises</h2>
-<div class="outline-text-2" id="text-org279a73a">
+<div id="outline-container-org7c1092b" class="outline-2">
+<h2 id="org7c1092b">Exercises</h2>
+<div class="outline-text-2" id="text-org7c1092b">
 <p>
 Suppose want to define a function that returns a specific number of <code>’peas</code>. We
 could define the function to return a <code>(List Atom)</code> like this:
@@ -481,8 +487,7 @@ stitch them together and check our work.
 <p>
 Now we can move on to something slightly more complex. In this section, we will
 implement the <code>last</code> function, which returns the last element of a vector of any
-type. There is an interesting tension that we have to resolve. The first is that
-all functions in Pie must be <i>total</i> functions.
+type.
 </p>
 
 <div class="org-src-container">
@@ -541,6 +546,171 @@ all functions in Pie must be <i>total</i> functions.
  Atom
  <span style="color: #2e8b57;">'Coming</span>
  <span style="color: #81a2be;">(</span><span style="color: #81a2be;">last</span> Atom <span style="color: #de935f; font-weight: bold;">2</span> <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'Winter</span> <span style="color: #b5bd68;">(</span>vec:: <span style="color: #2e8b57;">'Is</span> <span style="color: #c9b4cf;">(</span>vec:: <span style="color: #2e8b57;">'Coming</span>  vecnil<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+</pre>
+</div>
+
+<p>
+For the final exercise, we will implement <code>drop-last</code> which returns all but the
+last element of a vector of any type. As before, we begin by defining the
+motive which is a function applied to the target <code>Nat</code> which returns the <i>type</i>
+of the <code>base</code>, the <code>step</code> and the <code>ind-Nat</code> expression as a whole. Since we want
+<code>drop-last</code> to work with vectors of any type, we need a type parameter. Since we
+want to make a dependent type on the length of the <code>Vector</code>, we also need a
+<code>Nat</code> parameter. Lastly, the motive returns a type <i>by definition</i>. We can now
+write the claim for <code>motive-drop-last</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket"><span style="color: #b294bb;">#lang</span> <span style="color: #cc6666;">pie</span>
+
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> motive-drop-last
+  <span style="color: #81a2be;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #f0c674;">U</span> Nat
+      <span style="color: #f0c674;">U</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+For the implementation of <code>motive-drop-last</code>, we know we are writing a function
+and that we must accept the type and length for the vector’s type definition,
+and we must return a <i>type</i> describing a function that accepts a vector and
+returns a smaller vector.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">motive-drop-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>Vec E <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span>
+        <span style="color: #b5bd68;">(</span>Vec E k<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+With this type to guide us, we can synthesize the claim and the implementation
+of <code>base-drop-last</code>. Let’s start with the <code>claim</code>. Part of the entire point of
+the <code>motive</code> is to return the type of the <code>base</code>. Therefore, we need only look
+at the implementation of <code>motive=drop-last</code> to figure out what parameters we
+need to pass it from within the claim of the base. We need the type, which the
+base will also accept. We also need a specific Nat, which for the base case of
+induction on natural numbers we know to be zero:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> base-drop-last
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span>motive-drop-last E zero<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+This brings us to the implementation of the base. Plugging in <code>E</code> and <code>zero</code> for
+the arguments to the motive gives us the specific type of the base. The base
+must therefore return a function that takes a <code>(Vec E (add1 zero))</code> and returns
+a <code>(Vec E zero)</code>, of which there is only one instance: <code>vecnil</code>. The
+implementation can only be the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">base-drop-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E<span style="color: #de935f;">)</span> <span style="color: #5a5b5a;">;; </span><span style="color: #5a5b5a;">for the &#928; expression type parameter</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>es<span style="color: #b5bd68;">)</span> <span style="color: #5a5b5a;">;; </span><span style="color: #5a5b5a;">a function accepting a vector of one</span>
+      vecnil<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span> <span style="color: #5a5b5a;">;; </span><span style="color: #5a5b5a;">returning a vector of zero</span>
+
+</pre>
+</div>
+
+<p>
+Next up, we have the <code>step</code> function. We know that the step function for
+<code>ind-Nat</code> when the target is a <code>k</code> will will accept two arguments. The first is
+<code>k-1</code> (a <code>Nat</code> with the top <code>add1</code> eliminated), and the recursive result. The
+recursive result is described by the motive. Finally, while the step function
+accepts the result for <code>k-1</code>, <i>it</i> is supposed to return the result for <code>k</code>.
+This type is also described by the motive. We now have enough information to
+write the <code>claim</code> for <code>step-drop-last</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> step-drop-last
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>k Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span><span style="color: #81a2be;">-&gt;</span> <span style="color: #b5bd68;">(</span>motive-drop-last E k<span style="color: #b5bd68;">)</span>
+         <span style="color: #b5bd68;">(</span>motive-drop-last E <span style="color: #c9b4cf;">(</span><span style="color: #81a2be;">add1</span> k<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+The implementation is easier to piece together if we think of the final
+(outermost) step of this computation. Since we’re dropping the last item of the
+vector only, we know we need to preserve the head of the vector and cons
+(<code>vec::</code>) it onto the recursive result. But the recursive result is a function
+that takes vector, so the only thing that makes sense is to apply the result
+function to the <code>tail</code> of the vector that is passed to the lambda returned by
+the step.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">step-drop-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #b5bd68;">(</span>k-1 result-k-1<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #c9b4cf;">(</span>es<span style="color: #c9b4cf;">)</span>
+        <span style="color: #c9b4cf;">(</span>vec:: <span style="color: #f0c674;">(</span>head es<span style="color: #f0c674;">)</span>
+               <span style="color: #f0c674;">(</span>result-k-1
+                <span style="color: #81a2be;">(</span>tail es<span style="color: #81a2be;">)</span><span style="color: #f0c674;">)</span><span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+Finally, we come to <code>drop-last</code> which accepts the type and <code>Nat</code> that describe
+the vector. We can leverage the motive implementation here as well.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">claim</span> drop-last
+  <span style="color: #81a2be;">(</span>&#928; <span style="color: #de935f;">(</span><span style="color: #b5bd68;">(</span>E <span style="color: #f0c674;">U</span><span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>k Nat<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span>
+     <span style="color: #de935f;">(</span>motive-drop-last E k<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+The implementation can simply use <code>ind-Nat</code> to stitch together all of the pieces
+we’ve previously defined.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #b294bb;">define</span> <span style="color: #cc6666;">drop-last</span>
+  <span style="color: #81a2be;">(</span><span style="color: #b294bb;">&#955;</span> <span style="color: #de935f;">(</span>E k<span style="color: #de935f;">)</span>
+    <span style="color: #de935f;">(</span>ind-Nat k
+      <span style="color: #b5bd68;">(</span>motive-drop-last E<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>base-drop-last E<span style="color: #b5bd68;">)</span>
+      <span style="color: #b5bd68;">(</span>step-drop-last E<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
+</pre>
+</div>
+
+<p>
+All that remains is to check our implementation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span>check-same
+ <span style="color: #81a2be;">(</span>Vec Atom <span style="color: #de935f; font-weight: bold;">2</span><span style="color: #81a2be;">)</span>
+ <span style="color: #81a2be;">(</span>vec:: <span style="color: #2e8b57;">'a</span> <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'b</span> vecnil<span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span>
+ <span style="color: #81a2be;">(</span>drop-last Atom <span style="color: #de935f; font-weight: bold;">2</span> <span style="color: #de935f;">(</span>vec:: <span style="color: #2e8b57;">'a</span> <span style="color: #b5bd68;">(</span>vec:: <span style="color: #2e8b57;">'b</span> <span style="color: #c9b4cf;">(</span>vec:: <span style="color: #2e8b57;">'c</span> vecnil<span style="color: #c9b4cf;">)</span><span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
+
 </pre>
 </div>
 </div>
