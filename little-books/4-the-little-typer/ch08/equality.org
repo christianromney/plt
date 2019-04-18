@@ -1,0 +1,26 @@
+#+TITLE: Equality
+#+OPTIONS: toc:nil num:nil author:nil timestamp:nil
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+#+EXPORT_FILE_NAME: index.html
+* The Law of \equal
+
+#+begin_verse
+
+An expression $(= \textit{X}\space\textit{from}\space\textit{to})$ is a type if \\
+$\textit{X}$ is a type, \\
+$\textit{from}$ is an $\textit{X}$ \\
+and \\
+$\textit{to}$ is an $\textit{X}$.
+
+#+end_verse
+
+Note that from and to don’t have to be the same, just of the same /type/. For
+example:
+
+#+begin_example
+
+(= Atom ’Hello ’World)
+
+#+end_example
+
+is a type despite that =’Hello= \ne =’World=.
