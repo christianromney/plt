@@ -6,21 +6,31 @@
 
 #+begin_verse
 
-An expression $(= \textit{X}\space\textit{from}\space\textit{to})$ is a type if \\
-$\textit{X}$ is a type, \\
-$\textit{from}$ is an $\textit{X}$ \\
-and \\
-$\textit{to}$ is an $\textit{X}$.
+$\textrm{An expression}\space\textit{(= X from to)}\space\textrm{is a type if}$ \\
+$\textit{X}\space\textrm{is a type,}$ \\
+$\textit{from}\space\textrm{is an}\space\textit{X},\space\textrm{and}$ \\
+$\textit{to}\space\textrm{is an }\textit{X}$
 
 #+end_verse
 
-Note that from and to don’t have to be the same, just of the same /type/. For
-example:
+This creates a *dependent type*, since $\textit{from}$ and $\textit{to}$ are not types. Note that
+$\textit{from}$ and $\textit{to}$ don’t have to be the same, just of the same type. For example:
 
-#+begin_example
+#+begin_src racket :tangle no :lang pie
 
 (= Atom ’Hello ’World)
 
-#+end_example
+#+end_src
 
-is a type despite that =’Hello= \ne =’World=.
+is a type despite the fact that =’Hello= \ne =’World=.
+
+* The Law of Same
+
+#+begin_verse
+
+$\textit{(same e)}\space\textrm{is an}\space\textit{(= X e e)}\space\textrm{if}\space\textit{e}\space\textrm{is an}\space\textit{X}\space$
+
+#+end_verse
+
+$(same\space e)$ is the sole constructor for *values* described by *types* defined by $\textit{(= X from
+to)}$ expressions.

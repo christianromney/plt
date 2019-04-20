@@ -269,32 +269,48 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">Equality</h1>
-<div id="outline-container-org4117ae2" class="outline-2">
-<h2 id="org4117ae2">The Law of =</h2>
-<div class="outline-text-2" id="text-org4117ae2">
+<div id="outline-container-org480b630" class="outline-2">
+<h2 id="org480b630">The Law of =</h2>
+<div class="outline-text-2" id="text-org480b630">
 <p class="verse">
 <br />
-An expression \((= \textit{X}\space\textit{from}\space\textit{to})\) is a type if <br />
-\(\textit{X}\) is a type, <br />
-\(\textit{from}\) is an \(\textit{X}\) <br />
-and <br />
-\(\textit{to}\) is an \(\textit{X}\).<br />
+\(\textrm{An expression}\space\textit{(= X from to)}\space\textrm{is a type if}\) <br />
+\(\textit{X}\space\textrm{is a type,}\) <br />
+\(\textit{from}\space\textrm{is an}\space\textit{X},\space\textrm{and}\) <br />
+\(\textit{to}\space\textrm{is an }\textit{X}\)<br />
 <br />
 </p>
 
 <p>
-Note that from and to don’t have to be the same, just of the same <i>type</i>. For
-example:
+This creates a <b>dependent type</b>, since \(\textit{from}\) and \(\textit{to}\) are not types. Note that
+\(\textit{from}\) and \(\textit{to}\) don’t have to be the same, just of the same type. For example:
 </p>
 
-<pre class="example">
-
-(= Atom ’Hello ’World)
+<div class="org-src-container">
+<pre class="src src-racket">
+<span style="color: #b294bb;">(</span><span style="color: #81a2be;">=</span> Atom &#8217;Hello &#8217;World<span style="color: #b294bb;">)</span>
 
 </pre>
+</div>
 
 <p>
-is a type despite that <code>’Hello</code> &ne; <code>’World</code>.
+is a type despite the fact that <code>’Hello</code> &ne; <code>’World</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb291094" class="outline-2">
+<h2 id="orgb291094">The Law of Same</h2>
+<div class="outline-text-2" id="text-orgb291094">
+<p class="verse">
+<br />
+\(\textit{(same e)}\space\textrm{is an}\space\textit{(= X e e)}\space\textrm{if}\space\textit{e}\space\textrm{is an}\space\textit{X}\space\)<br />
+<br />
+</p>
+
+<p>
+\((same\space e)\) is the sole constructor for <b>values</b> described by <b>types</b> defined by \(\textit{(= X from
+to)}\) expressions.
 </p>
 </div>
 </div>
