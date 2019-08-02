@@ -58,3 +58,16 @@ sudoku(S11, S12, S13, S14,
     write(S31), write(' '), write(S32), write(' '), write(S33), write(' '), write(S34), nl,
     write(S41), write(' '), write(S42), write(' '), write(S43), write(' '), write(S44), nl,
     nl, nl.
+
+% sudoku(1, _, _, _,
+%        _, 2, _, _,
+%        _, _, 4, _,
+%        _, _, _, 3).
+%
+% =>
+%
+% Solution:
+% 1 3 2 4
+% 4 2 3 1
+% 3 1 4 2
+% 2 4 1 3
