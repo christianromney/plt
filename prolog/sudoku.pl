@@ -10,17 +10,21 @@ digit(2).
 digit(3).
 digit(4).
 
+% uniq succeeds if all 4 variables are digits
+% and they are all distinct.
 uniq(A, B, C, D) :-
     digit(A), digit(B),
-    \+ A = B,
+    A \= B,
     digit(C),
-    \+ A = C,
-    \+ B = C,
+    A \= C,
+    B \= C,
     digit(D),
-    \+ A = D,
-    \+ B = D,
-    \+ C = D.
+    A \= D,
+    B \= D,
+    C \= D.
 
+% all rows, columns and 2x2 corner squares must
+% simultaneously be unique digits in the domain 1-4.
 solve(S11, S12, S13, S14,
       S21, S22, S23, S24,
       S31, S32, S33, S34,
@@ -38,6 +42,7 @@ solve(S11, S12, S13, S14,
     uniq(S31, S32, S41, S42), % SW
     uniq(S33, S34, S43, S44). % SE
 
+% entry point delegates to solve and prints the solution.
 sudoku(S11, S12, S13, S14,
        S21, S22, S23, S24,
        S31, S32, S33, S34,
